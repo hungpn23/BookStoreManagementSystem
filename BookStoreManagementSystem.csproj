@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Windows.Forms, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.8.0.0\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -85,6 +89,8 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -96,6 +102,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddBookForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddBookForm.Designer.cs">
+      <DependentUpon>AddBookForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AuthorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AuthorForm.Designer.cs">
+      <DependentUpon>AuthorForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BookReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BookReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="DataAccess\AuthorRepository.cs" />
     <Compile Include="DataAccess\BookRepository.cs" />
     <Compile Include="DataAccess\DatabaseHelper.cs" />
@@ -110,6 +134,22 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReportForm.Designer.cs">
+      <DependentUpon>ReportForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="AddBookForm.resx">
+      <DependentUpon>AddBookForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AuthorForm.resx">
+      <DependentUpon>AuthorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BookReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>BookReport.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -122,6 +162,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ReportForm.resx">
+      <DependentUpon>ReportForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Author.datasource" />
     <None Include="Properties\DataSources\Book.datasource" />
@@ -141,6 +184,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
