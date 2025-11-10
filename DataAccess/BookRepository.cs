@@ -116,7 +116,7 @@ public class BookRepository
     /// <summary>
     /// Cập nhật sách.
     /// </summary>
-    public void UpdateBook(int id, string name, string type, float dailyRentalFee, DateTime publishedDate, int authorId, int? customerId)
+    public void UpdateBook(int id, string name, string type, float dailyRentalFee, DateTime publishedDate, int authorId)
     {
         string sql = @"
             UPDATE books SET
@@ -137,11 +137,6 @@ public class BookRepository
             new NpgsqlParameter("@dailyFee", NpgsqlDbType.Real) { Value = dailyRentalFee },
             new NpgsqlParameter("@pubDate", NpgsqlDbType.Timestamp) { Value = publishedDate },
             new NpgsqlParameter("@authorId", NpgsqlDbType.Integer) { Value = authorId },
-            // Xử lý giá trị NULL (DBNull)
-            new NpgsqlParameter("@customerId", NpgsqlDbType.Integer)
-            {
-                Value = customerId.HasValue ? (object)customerId.Value : (object)DBNull.Value
-            },
             new NpgsqlParameter("@id", NpgsqlDbType.Integer) { Value = id }
         };
         DatabaseHelper.ExecuteNonQuery(sql, parameters);

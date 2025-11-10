@@ -18,8 +18,8 @@ namespace BookStoreManagementSystem.Models
 
     public enum RentalStatus
     {
-        Renting,  // Đang thuê (giá trị mặc định)
-        Returned, // Đã trả
-        Overdue   // Quá hạn
+        Renting,
+        Returned,
+        Overdue
     }
 }
