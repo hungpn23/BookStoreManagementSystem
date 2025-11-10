@@ -29,13 +29,6 @@
         private void InitializeComponent()
         {
             this.dgvBooks = new System.Windows.Forms.DataGridView();
-            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.authorName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bookType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.publishedDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.price = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.authorId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.authorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listAuthorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,7 +39,7 @@
             this.btnUpdate = new System.Windows.Forms.Button();
             this.cmbEditAuthors = new System.Windows.Forms.ComboBox();
             this.dtpEditPublishedDate = new System.Windows.Forms.DateTimePicker();
-            this.numEditPrice = new System.Windows.Forms.NumericUpDown();
+            this.numEditDailyRentalFee = new System.Windows.Forms.NumericUpDown();
             this.txtEditType = new System.Windows.Forms.TextBox();
             this.txtEditName = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -58,10 +51,19 @@
             this.btnSearch = new System.Windows.Forms.Button();
             this.btnShowAll = new System.Windows.Forms.Button();
             this.btnBookReport = new System.Windows.Forms.Button();
+            this.id = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.authorId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.currentCustomerId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.authorName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.publishedDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dailyRentalFee = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.customerName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBooks)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.grpEditBook.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numEditPrice)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numEditDailyRentalFee)).BeginInit();
             this.SuspendLayout();
             // 
             // dgvBooks
@@ -69,79 +71,23 @@
             this.dgvBooks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvBooks.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id,
+            this.authorId,
+            this.currentCustomerId,
             this.name,
+            this.type,
             this.authorName,
-            this.bookType,
             this.publishedDate,
-            this.price,
-            this.authorId});
+            this.dailyRentalFee,
+            this.customerName});
             this.dgvBooks.Dock = System.Windows.Forms.DockStyle.Left;
-            this.dgvBooks.Location = new System.Drawing.Point(0, 28);
+            this.dgvBooks.Location = new System.Drawing.Point(0, 24);
             this.dgvBooks.Name = "dgvBooks";
             this.dgvBooks.RowHeadersWidth = 51;
             this.dgvBooks.RowTemplate.Height = 24;
-            this.dgvBooks.Size = new System.Drawing.Size(646, 525);
+            this.dgvBooks.Size = new System.Drawing.Size(646, 529);
             this.dgvBooks.TabIndex = 0;
             this.dgvBooks.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvBooks_CellDoubleClick);
             this.dgvBooks.SelectionChanged += new System.EventHandler(this.dgvBooks_SelectionChanged);
-            // 
-            // id
-            // 
-            this.id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.id.DataPropertyName = "id";
-            this.id.HeaderText = "ID";
-            this.id.MinimumWidth = 6;
-            this.id.Name = "id";
-            this.id.Visible = false;
-            // 
-            // name
-            // 
-            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.name.DataPropertyName = "name";
-            this.name.HeaderText = "Name";
-            this.name.MinimumWidth = 6;
-            this.name.Name = "name";
-            // 
-            // authorName
-            // 
-            this.authorName.DataPropertyName = "author_name";
-            this.authorName.HeaderText = "Author Name";
-            this.authorName.MinimumWidth = 6;
-            this.authorName.Name = "authorName";
-            this.authorName.Width = 125;
-            // 
-            // bookType
-            // 
-            this.bookType.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.bookType.DataPropertyName = "book_type";
-            this.bookType.HeaderText = "Type";
-            this.bookType.MinimumWidth = 6;
-            this.bookType.Name = "bookType";
-            // 
-            // publishedDate
-            // 
-            this.publishedDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.publishedDate.DataPropertyName = "published_date";
-            this.publishedDate.HeaderText = "Published Date";
-            this.publishedDate.MinimumWidth = 6;
-            this.publishedDate.Name = "publishedDate";
-            // 
-            // price
-            // 
-            this.price.DataPropertyName = "price";
-            this.price.HeaderText = "Price";
-            this.price.MinimumWidth = 6;
-            this.price.Name = "price";
-            this.price.Width = 125;
-            // 
-            // authorId
-            // 
-            this.authorId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.authorId.DataPropertyName = "author_id";
-            this.authorId.HeaderText = "Author ID";
-            this.authorId.MinimumWidth = 6;
-            this.authorId.Name = "authorId";
-            this.authorId.Visible = false;
             // 
             // menuStrip1
             // 
@@ -151,7 +97,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(982, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(982, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -160,13 +106,13 @@
             this.authorsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.listAuthorsToolStripMenuItem});
             this.authorsToolStripMenuItem.Name = "authorsToolStripMenuItem";
-            this.authorsToolStripMenuItem.Size = new System.Drawing.Size(74, 24);
+            this.authorsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.authorsToolStripMenuItem.Text = "Authors";
             // 
             // listAuthorsToolStripMenuItem
             // 
             this.listAuthorsToolStripMenuItem.Name = "listAuthorsToolStripMenuItem";
-            this.listAuthorsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.listAuthorsToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.listAuthorsToolStripMenuItem.Text = "List Authors";
             this.listAuthorsToolStripMenuItem.Click += new System.EventHandler(this.listAuthorsToolStripMenuItem_Click);
             // 
@@ -187,7 +133,7 @@
             this.grpEditBook.Controls.Add(this.btnUpdate);
             this.grpEditBook.Controls.Add(this.cmbEditAuthors);
             this.grpEditBook.Controls.Add(this.dtpEditPublishedDate);
-            this.grpEditBook.Controls.Add(this.numEditPrice);
+            this.grpEditBook.Controls.Add(this.numEditDailyRentalFee);
             this.grpEditBook.Controls.Add(this.txtEditType);
             this.grpEditBook.Controls.Add(this.txtEditName);
             this.grpEditBook.Controls.Add(this.label5);
@@ -219,7 +165,7 @@
             this.lblSelectedBookId.AutoSize = true;
             this.lblSelectedBookId.Location = new System.Drawing.Point(126, 0);
             this.lblSelectedBookId.Name = "lblSelectedBookId";
-            this.lblSelectedBookId.Size = new System.Drawing.Size(18, 20);
+            this.lblSelectedBookId.Size = new System.Drawing.Size(14, 16);
             this.lblSelectedBookId.TabIndex = 24;
             this.lblSelectedBookId.Text = "0";
             // 
@@ -238,36 +184,36 @@
             this.cmbEditAuthors.FormattingEnabled = true;
             this.cmbEditAuthors.Location = new System.Drawing.Point(92, 232);
             this.cmbEditAuthors.Name = "cmbEditAuthors";
-            this.cmbEditAuthors.Size = new System.Drawing.Size(121, 28);
+            this.cmbEditAuthors.Size = new System.Drawing.Size(121, 24);
             this.cmbEditAuthors.TabIndex = 21;
             // 
             // dtpEditPublishedDate
             // 
             this.dtpEditPublishedDate.Location = new System.Drawing.Point(50, 186);
             this.dtpEditPublishedDate.Name = "dtpEditPublishedDate";
-            this.dtpEditPublishedDate.Size = new System.Drawing.Size(200, 25);
+            this.dtpEditPublishedDate.Size = new System.Drawing.Size(200, 21);
             this.dtpEditPublishedDate.TabIndex = 20;
             // 
-            // numEditPrice
+            // numEditDailyRentalFee
             // 
-            this.numEditPrice.DecimalPlaces = 2;
-            this.numEditPrice.Location = new System.Drawing.Point(92, 117);
-            this.numEditPrice.Name = "numEditPrice";
-            this.numEditPrice.Size = new System.Drawing.Size(120, 25);
-            this.numEditPrice.TabIndex = 19;
+            this.numEditDailyRentalFee.DecimalPlaces = 2;
+            this.numEditDailyRentalFee.Location = new System.Drawing.Point(107, 117);
+            this.numEditDailyRentalFee.Name = "numEditDailyRentalFee";
+            this.numEditDailyRentalFee.Size = new System.Drawing.Size(120, 21);
+            this.numEditDailyRentalFee.TabIndex = 19;
             // 
             // txtEditType
             // 
             this.txtEditType.Location = new System.Drawing.Point(80, 71);
             this.txtEditType.Name = "txtEditType";
-            this.txtEditType.Size = new System.Drawing.Size(100, 25);
+            this.txtEditType.Size = new System.Drawing.Size(100, 21);
             this.txtEditType.TabIndex = 18;
             // 
             // txtEditName
             // 
             this.txtEditName.Location = new System.Drawing.Point(80, 27);
             this.txtEditName.Name = "txtEditName";
-            this.txtEditName.Size = new System.Drawing.Size(100, 25);
+            this.txtEditName.Size = new System.Drawing.Size(100, 21);
             this.txtEditName.TabIndex = 17;
             // 
             // label5
@@ -275,7 +221,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(19, 235);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(63, 20);
+            this.label5.Size = new System.Drawing.Size(49, 16);
             this.label5.TabIndex = 16;
             this.label5.Text = "Author";
             // 
@@ -284,7 +230,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(19, 163);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(135, 20);
+            this.label4.Size = new System.Drawing.Size(105, 16);
             this.label4.TabIndex = 15;
             this.label4.Text = "Published Date";
             // 
@@ -293,16 +239,16 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(19, 119);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 20);
+            this.label3.Size = new System.Drawing.Size(70, 16);
             this.label3.TabIndex = 14;
-            this.label3.Text = "Price";
+            this.label3.Text = "Daily Fee";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(19, 74);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(45, 20);
+            this.label2.Size = new System.Drawing.Size(35, 16);
             this.label2.TabIndex = 13;
             this.label2.Text = "Type";
             // 
@@ -311,7 +257,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(19, 30);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(45, 20);
+            this.label1.Size = new System.Drawing.Size(35, 16);
             this.label1.TabIndex = 12;
             this.label1.Text = "Name";
             // 
@@ -319,7 +265,7 @@
             // 
             this.txtSearchName.Location = new System.Drawing.Point(662, 45);
             this.txtSearchName.Name = "txtSearchName";
-            this.txtSearchName.Size = new System.Drawing.Size(227, 25);
+            this.txtSearchName.Size = new System.Drawing.Size(227, 21);
             this.txtSearchName.TabIndex = 6;
             // 
             // btnSearch
@@ -352,9 +298,78 @@
             this.btnBookReport.UseVisualStyleBackColor = true;
             this.btnBookReport.Click += new System.EventHandler(this.btnBookReport_Click);
             // 
+            // id
+            // 
+            this.id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.id.DataPropertyName = "id";
+            this.id.HeaderText = "ID";
+            this.id.MinimumWidth = 6;
+            this.id.Name = "id";
+            this.id.Visible = false;
+            // 
+            // authorId
+            // 
+            this.authorId.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.authorId.DataPropertyName = "author_id";
+            this.authorId.HeaderText = "Author ID";
+            this.authorId.MinimumWidth = 6;
+            this.authorId.Name = "authorId";
+            this.authorId.Visible = false;
+            // 
+            // currentCustomerId
+            // 
+            this.currentCustomerId.DataPropertyName = "current_customer_id";
+            this.currentCustomerId.HeaderText = "Current Customer ID";
+            this.currentCustomerId.Name = "currentCustomerId";
+            this.currentCustomerId.Visible = false;
+            // 
+            // name
+            // 
+            this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.name.DataPropertyName = "name";
+            this.name.HeaderText = "Name";
+            this.name.MinimumWidth = 6;
+            this.name.Name = "name";
+            // 
+            // type
+            // 
+            this.type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.type.DataPropertyName = "type";
+            this.type.HeaderText = "Type";
+            this.type.MinimumWidth = 6;
+            this.type.Name = "type";
+            // 
+            // authorName
+            // 
+            this.authorName.DataPropertyName = "author_name";
+            this.authorName.HeaderText = "Author";
+            this.authorName.MinimumWidth = 6;
+            this.authorName.Name = "authorName";
+            this.authorName.Width = 125;
+            // 
+            // publishedDate
+            // 
+            this.publishedDate.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.publishedDate.DataPropertyName = "published_date";
+            this.publishedDate.HeaderText = "Published Date";
+            this.publishedDate.MinimumWidth = 6;
+            this.publishedDate.Name = "publishedDate";
+            // 
+            // dailyRentalFee
+            // 
+            this.dailyRentalFee.DataPropertyName = "daily_rental_fee";
+            this.dailyRentalFee.HeaderText = "Daily Fee";
+            this.dailyRentalFee.Name = "dailyRentalFee";
+            // 
+            // customerName
+            // 
+            this.customerName.DataPropertyName = "customer_name";
+            this.customerName.HeaderText = "Customer";
+            this.customerName.Name = "customerName";
+            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(982, 553);
             this.Controls.Add(this.btnBookReport);
@@ -378,7 +393,7 @@
             this.menuStrip1.PerformLayout();
             this.grpEditBook.ResumeLayout(false);
             this.grpEditBook.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numEditPrice)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numEditDailyRentalFee)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -387,13 +402,6 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dgvBooks;
-        private System.Windows.Forms.DataGridViewTextBoxColumn id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn authorName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn bookType;
-        private System.Windows.Forms.DataGridViewTextBoxColumn publishedDate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn price;
-        private System.Windows.Forms.DataGridViewTextBoxColumn authorId;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem authorsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem listAuthorsToolStripMenuItem;
@@ -402,7 +410,7 @@
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.ComboBox cmbEditAuthors;
         private System.Windows.Forms.DateTimePicker dtpEditPublishedDate;
-        private System.Windows.Forms.NumericUpDown numEditPrice;
+        private System.Windows.Forms.NumericUpDown numEditDailyRentalFee;
         private System.Windows.Forms.TextBox txtEditType;
         private System.Windows.Forms.TextBox txtEditName;
         private System.Windows.Forms.Label label5;
@@ -416,5 +424,14 @@
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Button btnShowAll;
         private System.Windows.Forms.Button btnBookReport;
+        private System.Windows.Forms.DataGridViewTextBoxColumn id;
+        private System.Windows.Forms.DataGridViewTextBoxColumn authorId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn currentCustomerId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn name;
+        private System.Windows.Forms.DataGridViewTextBoxColumn type;
+        private System.Windows.Forms.DataGridViewTextBoxColumn authorName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn publishedDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dailyRentalFee;
+        private System.Windows.Forms.DataGridViewTextBoxColumn customerName;
     }
 }

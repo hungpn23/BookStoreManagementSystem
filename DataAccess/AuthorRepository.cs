@@ -1,4 +1,4 @@
-﻿using BookStoreManagementSystem.DataAccess; // Cần dùng DatabaseHelper
+﻿using BookStoreManagementSystem.DataAccess;
 using Npgsql;
 using NpgsqlTypes;
 using System;
@@ -8,36 +8,22 @@ namespace BookStoreManagementSystem.DataAccess
 {
     public class AuthorRepository
     {
-        /// <summary>
-        /// Lấy tất cả các cột của tất cả tác giả.
-        /// </summary>
-        /// <returns>Một DataTable chứa danh sách tác giả.</returns>
         public DataTable GetAllAuthors()
         {
-            // Lấy tất cả thông tin từ bảng authors (dựa trên BookStoreMigrationUp.sql)
+            // Đã sửa: Dùng 'bio'
             string sql = @"
                 SELECT 
-                    id, 
-                    name, 
-                    birth_date, 
-                    short_bio 
-                FROM 
-                    authors
-                ORDER BY
-                    name;
+                    id, name, birth_date, bio 
+                FROM authors ORDER BY name;
             ";
-
-            // Sử dụng lại DatabaseHelper đã tạo ở các bước trước
             return DatabaseHelper.GetDataTable(sql);
         }
 
-        /// <summary>
-        /// Tìm kiếm tác giả theo tên (không phân biệt hoa thường).
-        /// </summary>
         public DataTable SearchAuthorsByName(string name)
         {
+            // Đã sửa: Dùng 'bio'
             string sql = @"
-                SELECT id, name, birth_date, short_bio 
+                SELECT id, name, birth_date, bio 
                 FROM authors
                 WHERE name ILIKE @searchTerm
                 ORDER BY name;";
@@ -46,41 +32,34 @@ namespace BookStoreManagementSystem.DataAccess
             {
                 new NpgsqlParameter("@searchTerm", NpgsqlDbType.Varchar) { Value = $"%{name}%" }
             };
-
-            // Dùng hàm GetDataTable CÓ tham số
             return DatabaseHelper.GetDataTable(sql, parameters);
         }
 
-        /// <summary>
-        /// Thêm một tác giả mới.
-        /// </summary>
-        public void AddAuthor(string name, DateTime birthDate, string shortBio)
+        public void AddAuthor(string name, DateTime birthDate, string bio)
         {
+            // Đã sửa: Dùng 'bio'
             string sql = @"
-                INSERT INTO authors (name, birth_date, short_bio)
-                VALUES (@name, @birthDate, @shortBio);
+                INSERT INTO authors (name, birth_date, bio)
+                VALUES (@name, @birthDate, @bio);
             ";
 
             var parameters = new NpgsqlParameter[]
             {
                 new NpgsqlParameter("@name", NpgsqlDbType.Varchar) { Value = name },
                 new NpgsqlParameter("@birthDate", NpgsqlDbType.Timestamp) { Value = birthDate },
-                new NpgsqlParameter("@shortBio", NpgsqlDbType.Text) { Value = (object)shortBio ?? DBNull.Value } // Cho phép shortBio là NULL
+                new NpgsqlParameter("@bio", NpgsqlDbType.Text) { Value = (object)bio ?? DBNull.Value }
             };
-
             DatabaseHelper.ExecuteNonQuery(sql, parameters);
         }
 
-        /// <summary>
-        /// Cập nhật một tác giả dựa trên ID.
-        /// </summary>
-        public void UpdateAuthor(int id, string name, DateTime birthDate, string shortBio)
+        public void UpdateAuthor(int id, string name, DateTime birthDate, string bio)
         {
+            // Đã sửa: Dùng 'bio'
             string sql = @"
                 UPDATE authors SET
                     name = @name,
                     birth_date = @birthDate,
-                    short_bio = @shortBio
+                    bio = @bio
                 WHERE
                     id = @id;
             ";
@@ -89,25 +68,19 @@ namespace BookStoreManagementSystem.DataAccess
             {
                 new NpgsqlParameter("@name", NpgsqlDbType.Varchar) { Value = name },
                 new NpgsqlParameter("@birthDate", NpgsqlDbType.Timestamp) { Value = birthDate },
-                new NpgsqlParameter("@shortBio", NpgsqlDbType.Text) { Value = (object)shortBio ?? DBNull.Value },
+                new NpgsqlParameter("@bio", NpgsqlDbType.Text) { Value = (object)bio ?? DBNull.Value },
                 new NpgsqlParameter("@id", NpgsqlDbType.Integer) { Value = id }
             };
-
             DatabaseHelper.ExecuteNonQuery(sql, parameters);
         }
 
-        /// <summary>
-        /// Xóa một tác giả dựa trên ID.
-        /// </summary>
         public void DeleteAuthor(int id)
         {
             string sql = "DELETE FROM authors WHERE id = @id;";
-
             var parameters = new NpgsqlParameter[]
             {
                 new NpgsqlParameter("@id", NpgsqlDbType.Integer) { Value = id }
             };
-
             DatabaseHelper.ExecuteNonQuery(sql, parameters);
         }
     }

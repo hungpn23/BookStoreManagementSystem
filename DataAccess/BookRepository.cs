@@ -1,80 +1,131 @@
 ﻿using BookStoreManagementSystem.DataAccess;
+using BookStoreManagementSystem.Models;
 using Npgsql;
 using NpgsqlTypes;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Xml.Linq;
 
 public class BookRepository
 {
-    // Hàm này đã được khởi tạo trong MainForm.cs
-    public BookRepository()
-    {
-    }
+    public BookRepository() { }
 
     /// <summary>
-    /// Lấy tất cả sách, bao gồm tất cả các cột từ bảng Books
-    /// và thêm cột 'author_name' từ bảng Authors.
+    /// Lấy tất cả sách, bao gồm tên tác giả và tên người đang thuê.
     /// </summary>
-    /// <returns>Một DataTable chứa dữ liệu đã join.</returns>
-    public DataTable GetAllBooksWithAuthorName()
+    public DataTable GetAllBooksWithDetails()
     {
-        // Câu SQL này JOIN bảng books và authors
-        // và chọn tất cả các cột từ 'books', cộng thêm cột 'name' từ 'authors'
-        // mà chúng ta đổi tên thành 'author_name' để tránh trùng lặp.
         string sql = @"
             SELECT 
                 b.id, 
                 b.name, 
-                b.book_type, 
+                b.type, 
                 b.published_date, 
-                b.price, 
+                b.daily_rental_fee, 
                 b.author_id, 
-                a.name AS author_name 
+                a.name AS author_name,
+                b.current_customer_id,
+                c.full_name AS customer_name
             FROM 
                 books b
             JOIN 
                 authors a ON b.author_id = a.id
+            LEFT JOIN
+                customers c ON b.current_customer_id = c.id
+            ORDER BY
+                b.id;
+        ";
+        return DatabaseHelper.GetDataTable(sql);
+    }
+
+    public DataTable GetAllBooksWithDetails(int authorId)
+    {
+        string sql = @"
+            SELECT 
+                b.id, 
+                b.name, 
+                b.type, 
+                b.published_date, 
+                b.daily_rental_fee, 
+                b.author_id, 
+                a.name AS author_name,
+                b.current_customer_id,
+                c.full_name AS customer_name
+            FROM 
+                books b
+            WHERE
+                b.author_id = @authorId
+            JOIN 
+                authors a ON b.author_id = a.id
+            LEFT JOIN
+                customers c ON b.current_customer_id = c.id
             ORDER BY
                 b.id;
         ";
 
-        // Sử dụng DatabaseHelper để thực thi và lấy kết quả
+        var parameters = new NpgsqlParameter[]
+        {
+            new NpgsqlParameter("@authorId", NpgsqlDbType.Integer) { Value = authorId }
+        };
+
+        return DatabaseHelper.GetDataTable(sql, parameters);
+    }
+
+    /// <summary>
+    /// Lấy tất cả sách đang có sẵn (chưa ai thuê).
+    /// (Đã sửa: dùng current_customer_id)
+    /// </summary>
+    public DataTable GetAvailableBooks()
+    {
+        string sql = @"
+            SELECT 
+                id, 
+                name,
+                daily_rental_fee
+            FROM 
+                books
+            WHERE
+                current_customer_id IS NULL
+            ORDER BY
+                name;
+        ";
         return DatabaseHelper.GetDataTable(sql);
     }
 
     /// <summary>
-    /// Thêm một cuốn sách mới vào cơ sở dữ liệu.
+    /// Thêm sách mới.
+    /// (Đã sửa: dùng cột 'type')
     /// </summary>
-    public void AddBook(string name, string type, float price, DateTime publishedDate, int authorId)
+    public void AddBook(string name, string type, float dailyRentalFee, DateTime publishedDate, int authorId)
     {
         string sql = @"
-            INSERT INTO books (name, book_type, price, published_date, author_id)
-            VALUES (@name, @type, @price, @pubDate, @authorId);
+            INSERT INTO books (name, type, daily_rental_fee, published_date, author_id)
+            VALUES (@name, @type, @dailyFee, @pubDate, @authorId);
         ";
 
         var parameters = new NpgsqlParameter[]
         {
             new NpgsqlParameter("@name", NpgsqlDbType.Varchar) { Value = name },
             new NpgsqlParameter("@type", NpgsqlDbType.Varchar) { Value = type },
-            new NpgsqlParameter("@price", NpgsqlDbType.Real) { Value = price },
+            new NpgsqlParameter("@dailyFee", NpgsqlDbType.Real) { Value = dailyRentalFee },
             new NpgsqlParameter("@pubDate", NpgsqlDbType.Timestamp) { Value = publishedDate },
             new NpgsqlParameter("@authorId", NpgsqlDbType.Integer) { Value = authorId }
         };
-
         DatabaseHelper.ExecuteNonQuery(sql, parameters);
     }
 
     /// <summary>
-    /// Cập nhật thông tin một cuốn sách dựa trên ID của nó.
+    /// Cập nhật sách.
+    /// (Đã sửa: dùng cột 'type')
     /// </summary>
-    public void UpdateBook(int id, string name, string type, float price, DateTime publishedDate, int authorId)
+    public void UpdateBook(int id, string name, string type, float dailyRentalFee, DateTime publishedDate, int authorId)
     {
         string sql = @"
             UPDATE books SET
                 name = @name,
-                book_type = @type,
-                price = @price,
+                type = @type,
+                daily_rental_fee = @dailyFee,
                 published_date = @pubDate,
                 author_id = @authorId
             WHERE
@@ -85,120 +136,83 @@ public class BookRepository
         {
             new NpgsqlParameter("@name", NpgsqlDbType.Varchar) { Value = name },
             new NpgsqlParameter("@type", NpgsqlDbType.Varchar) { Value = type },
-            new NpgsqlParameter("@price", NpgsqlDbType.Real) { Value = price },
+            new NpgsqlParameter("@dailyFee", NpgsqlDbType.Real) { Value = dailyRentalFee },
             new NpgsqlParameter("@pubDate", NpgsqlDbType.Timestamp) { Value = publishedDate },
             new NpgsqlParameter("@authorId", NpgsqlDbType.Integer) { Value = authorId },
-            new NpgsqlParameter("@id", NpgsqlDbType.Integer) { Value = id } // Tham số ID cho mệnh đề WHERE
+            new NpgsqlParameter("@id", NpgsqlDbType.Integer) { Value = id }
         };
-
         DatabaseHelper.ExecuteNonQuery(sql, parameters);
     }
 
     /// <summary>
-    /// Xóa một cuốn sách khỏi cơ sở dữ liệu dựa trên ID.
+    /// Xóa một cuốn sách (Không thay đổi).
     /// </summary>
     public void DeleteBook(int id)
     {
-        // Câu lệnh DELETE, sử dụng tham số @id
         string sql = "DELETE FROM books WHERE id = @id;";
-
-        // Tạo tham số
         var parameters = new NpgsqlParameter[]
         {
             new NpgsqlParameter("@id", NpgsqlDbType.Integer) { Value = id }
         };
-
-        // Gọi hàm ExecuteNonQuery
         DatabaseHelper.ExecuteNonQuery(sql, parameters);
     }
 
     /// <summary>
-    /// Tìm kiếm sách theo tên (không phân biệt hoa thường, chứa).
+    /// Tìm kiếm sách.
+    /// (Đã sửa: dùng b.type, b.current_customer_id, c.full_name AS customer_name)
     /// </summary>
     public DataTable SearchBooksByName(string name)
     {
-        // Câu SQL này vẫn JOIN 2 bảng
-        // và thêm mệnh đề WHERE b.name ILIKE @searchTerm
-        // (ILIKE là "LIKE" không phân biệt hoa thường trong PostgreSQL)
         string sql = @"
             SELECT 
-                b.id, b.name, b.book_type, b.published_date, 
-                b.price, b.author_id, a.name AS author_name 
+                b.id, b.name, b.type, b.published_date, 
+                b.daily_rental_fee, b.author_id, a.name AS author_name,
+                b.current_customer_id, c.full_name AS customer_name
             FROM 
                 books b
             JOIN 
                 authors a ON b.author_id = a.id
+            LEFT JOIN
+                customers c ON b.current_customer_id = c.id
             WHERE
                 b.name ILIKE @searchTerm
             ORDER BY
                 b.name;
         ";
-
-        // Tạo tham số. Thêm "%" để tìm kiếm "chứa"
         var parameters = new NpgsqlParameter[]
         {
             new NpgsqlParameter("@searchTerm", NpgsqlDbType.Varchar) { Value = $"%{name}%" }
         };
-
-        // Gọi hàm GetDataTable MỚI có tham số
-        return DatabaseHelper.GetDataTable(sql, parameters);
-    }
-
-    /// <summary>
-    /// Lấy tất cả các sách của một tác giả cụ thể.
-    /// </summary>
-    public DataTable GetBooksByAuthorId(int authorId)
-    {
-        // Câu SQL này JOIN 2 bảng và lọc theo author_id
-        string sql = @"
-            SELECT 
-                b.id, b.name, b.book_type, b.published_date, 
-                b.price, b.author_id, a.name AS author_name 
-            FROM 
-                books b
-            JOIN 
-                authors a ON b.author_id = a.id
-            WHERE
-                b.author_id = @authorId
-            ORDER BY
-                b.name;
-        ";
-
-        // Tạo tham số
-        var parameters = new NpgsqlParameter[]
-        {
-            new NpgsqlParameter("@authorId", NpgsqlDbType.Integer) { Value = authorId }
-        };
-
-        // Gọi hàm GetDataTable CÓ tham số
         return DatabaseHelper.GetDataTable(sql, parameters);
     }
 
     /// <summary>
     /// Lấy tất cả sách dưới dạng List<Book> (dùng cho Crystal Reports).
+    /// (Đã sửa: dùng 'type' và 'current_customer_id')
     /// </summary>
     public List<Book> GetAllBooksAsList()
     {
         List<Book> books = new List<Book>();
+        // (Lưu ý: Bạn cũng cần cập nhật Model 'Book.cs' để đổi tên 'CurrentRenterId' thành 'CurrentCustomerId')
+        DataTable dt = DatabaseHelper.GetDataTable("SELECT id, name, daily_rental_fee, published_date, type, author_id, current_customer_id FROM books ORDER BY id");
 
-        // Dùng lại hàm GetDataTable của DatabaseHelper
-        DataTable dt = DatabaseHelper.GetDataTable("SELECT * FROM books ORDER BY id");
-
-        // Chuyển đổi từ DataTable sang List<Book>
         foreach (DataRow row in dt.Rows)
         {
             Book book = new Book
             {
                 Id = Convert.ToInt32(row["id"]),
                 Name = row["name"].ToString(),
-                Price = Convert.ToSingle(row["price"]),
+                DailyRentalFee = Convert.ToSingle(row["daily_rental_fee"]),
                 PublishedDate = Convert.ToDateTime(row["published_date"]),
-                Type = row["book_type"].ToString(),
-                AuthorId = Convert.ToInt32(row["author_id"])
+                Type = row["type"].ToString(), // Sửa 'book_type' thành 'type'
+                AuthorId = Convert.ToInt32(row["author_id"]),
+
+                // Giả sử Model 'Book.cs' của bạn đã được cập nhật thành:
+                // public int? CurrentCustomerId { get; set; }
+                CurrentCustomerId = row["current_customer_id"] == DBNull.Value ? (int?)null : Convert.ToInt32(row["current_customer_id"])
             };
             books.Add(book);
         }
-
         return books;
     }
 }

@@ -122,7 +122,9 @@
     </Compile>
     <Compile Include="DataAccess\AuthorRepository.cs" />
     <Compile Include="DataAccess\BookRepository.cs" />
+    <Compile Include="DataAccess\CustomerRepository.cs" />
     <Compile Include="DataAccess\DatabaseHelper.cs" />
+    <Compile Include="DataAccess\RentalRepository.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -131,7 +133,8 @@
     </Compile>
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Book.cs" />
-    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\BookRental.cs" />
+    <Compile Include="Models\Customer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportForm.cs">

@@ -1,4 +1,5 @@
 ﻿// Thêm các using này
+using BookStoreManagementSystem.Models;
 using CrystalDecisions.CrystalReports.Engine;
 using System.Collections.Generic;
 using System.Windows.Forms;

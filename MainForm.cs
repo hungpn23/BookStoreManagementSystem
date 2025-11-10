@@ -1,7 +1,9 @@
 ﻿using BookStoreManagementSystem.DataAccess;
+using BookStoreManagementSystem.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace BookStoreManagementSystem
@@ -45,7 +47,7 @@ namespace BookStoreManagementSystem
 
         private void LoadBooks()
         {
-            dgvBooks.DataSource = _bookRepository.GetAllBooksWithAuthorName();
+            dgvBooks.DataSource = _bookRepository.GetAllBooksWithDetails();
         }
 
         private void LoadAuthorsToEditComboBox()
@@ -73,18 +75,21 @@ namespace BookStoreManagementSystem
                     DataGridViewRow row = dgvBooks.SelectedRows[0];
 
                     string id = row.Cells["id"].Value.ToString();
-                    string name = row.Cells["name"].Value.ToString();
-                    string type = row.Cells["bookType"].Value.ToString();
-                    decimal price = Convert.ToDecimal(row.Cells["price"].Value);
-                    DateTime pubDate = Convert.ToDateTime(row.Cells["publishedDate"].Value);
                     int authorId = Convert.ToInt32(row.Cells["authorId"].Value);
+                    int currentCustomerId = row.Cells["current_customer_id"].Value != DBNull.Value
+                        ? Convert.ToInt32(row.Cells["current_customer_id"].Value)
+                        : -1;
+                    string name = row.Cells["name"].Value.ToString();
+                    string type = row.Cells["type"].Value.ToString();
+                    DateTime pubDate = Convert.ToDateTime(row.Cells["publishedDate"].Value);
+                    decimal dailyRentalFee = Convert.ToDecimal(row.Cells["dailyRentalFee"].Value);
 
                     lblSelectedBookId.Text = id;
+                    cmbEditAuthors.SelectedValue = authorId;
                     txtEditName.Text = name;
                     txtEditType.Text = type;
-                    numEditPrice.Value = price;
                     dtpEditPublishedDate.Value = pubDate;
-                    cmbEditAuthors.SelectedValue = authorId; 
+                    numEditDailyRentalFee.Value = dailyRentalFee;
                 }
                 catch (Exception ex)
                 {
@@ -104,7 +109,7 @@ namespace BookStoreManagementSystem
                 int id = Convert.ToInt32(lblSelectedBookId.Text);
                 string name = txtEditName.Text;
                 string type = txtEditType.Text;
-                float price = (float)numEditPrice.Value;
+                float price = (float)numEditDailyRentalFee.Value;
                 DateTime pubDate = dtpEditPublishedDate.Value;
                 int authorId = (int)cmbEditAuthors.SelectedValue;
 
@@ -164,7 +169,7 @@ namespace BookStoreManagementSystem
             lblSelectedBookId.Text = "0";
             txtEditName.Text = "";
             txtEditType.Text = "";
-            numEditPrice.Value = 0;
+            numEditDailyRentalFee.Value = 0;
             dtpEditPublishedDate.Value = DateTime.Now;
 
             if (cmbEditAuthors.Items.Count > 0)
@@ -234,7 +239,7 @@ namespace BookStoreManagementSystem
                         string authorName = row.Cells["authorName"].Value.ToString();
 
                         // 6. Gọi hàm Repository mới để lọc danh sách
-                        DataTable dtBooksByAuthor = _bookRepository.GetBooksByAuthorId(authorId);
+                        DataTable dtBooksByAuthor = _bookRepository.GetAllBooksWithDetails(authorId);
 
                         // 7. Cập nhật lại DataGridView
                         dgvBooks.DataSource = dtBooksByAuthor;
