@@ -1,5 +1,4 @@
-﻿using BookStoreManagementSystem.DataAccess;
-using Npgsql;
+﻿using Npgsql;
 using NpgsqlTypes;
 using System;
 using System.Data;
@@ -10,7 +9,6 @@ namespace BookStoreManagementSystem.DataAccess
     {
         public DataTable GetAllAuthors()
         {
-            // Đã sửa: Dùng 'bio'
             string sql = @"
                 SELECT 
                     id, name, birth_date, bio 
@@ -21,7 +19,6 @@ namespace BookStoreManagementSystem.DataAccess
 
         public DataTable SearchAuthorsByName(string name)
         {
-            // Đã sửa: Dùng 'bio'
             string sql = @"
                 SELECT id, name, birth_date, bio 
                 FROM authors
@@ -37,7 +34,6 @@ namespace BookStoreManagementSystem.DataAccess
 
         public void AddAuthor(string name, DateTime birthDate, string bio)
         {
-            // Đã sửa: Dùng 'bio'
             string sql = @"
                 INSERT INTO authors (name, birth_date, bio)
                 VALUES (@name, @birthDate, @bio);
@@ -54,7 +50,6 @@ namespace BookStoreManagementSystem.DataAccess
 
         public void UpdateAuthor(int id, string name, DateTime birthDate, string bio)
         {
-            // Đã sửa: Dùng 'bio'
             string sql = @"
                 UPDATE authors SET
                     name = @name,

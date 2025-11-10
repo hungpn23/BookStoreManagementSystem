@@ -11,7 +11,15 @@ namespace BookStoreManagementSystem.Models
         public DateTime DueDate { get; set; }
         public DateTime? ActualReturnDate { get; set; }
         public float DailyFeeAtRental { get; set; }
-        public float? TotalDue { get; set; }
-        public string Status { get; set; }
+        public float? TotalFee { get; set; }
+        public RentalStatus Status { get; set; }
+
+    }
+
+    public enum RentalStatus
+    {
+        Renting,  // Đang thuê (giá trị mặc định)
+        Returned, // Đã trả
+        Overdue   // Quá hạn
     }
 }

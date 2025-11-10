@@ -28,7 +28,9 @@ namespace BookStoreManagementSystem
             {
                 string name = txtName.Text;
                 string type = txtType.Text;
-                float price = (float)numPrice.Value;
+
+                float dailyFee = (float)numDailyRentalFee.Value;
+
                 DateTime pubDate = dtpPublishedDate.Value;
                 int authorId = (int)cmbAuthors.SelectedValue;
 
@@ -38,7 +40,7 @@ namespace BookStoreManagementSystem
                     return;
                 }
 
-                _bookRepository.AddBook(name, type, price, pubDate, authorId);
+                _bookRepository.AddBook(name, type, dailyFee, pubDate, authorId);
 
                 MessageBox.Show("Thêm sách thành công!", "Thông báo");
 
@@ -66,7 +68,7 @@ namespace BookStoreManagementSystem
                 cmbAuthors.DataSource = dtAuthors;
                 cmbAuthors.DisplayMember = "name";
                 cmbAuthors.ValueMember = "id";
-                cmbAuthors.DropDownStyle = ComboBoxStyle.DropDownList; 
+                cmbAuthors.DropDownStyle = ComboBoxStyle.DropDownList;
             }
             catch (Exception ex)
             {

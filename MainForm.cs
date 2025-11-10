@@ -12,42 +12,26 @@ namespace BookStoreManagementSystem
     {
         private readonly BookRepository _bookRepository;
         private readonly AuthorRepository _authorRepository;
+        private readonly CustomerRepository _customerRepository;
 
         public MainForm()
         {
             InitializeComponent();
             _bookRepository = new BookRepository();
             _authorRepository = new AuthorRepository();
+            _customerRepository = new CustomerRepository();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             LoadBooks();
-            LoadAuthorsToEditComboBox();
-        }
-
-        private void listAuthorsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AuthorForm authorForm = new AuthorForm();
-
-            authorForm.ShowDialog();
-        }
-
-        private void btnAddBook_Click(object sender, EventArgs e)
-        {
-            AddBookForm frmAddBook = new AddBookForm();
-
-            var result = frmAddBook.ShowDialog();
-
-            if (result == DialogResult.OK)
-            {
-                LoadBooks();
-            }
         }
 
         private void LoadBooks()
         {
             dgvBooks.DataSource = _bookRepository.GetAllBooksWithDetails();
+            LoadAuthorsToEditComboBox();
+            LoadCustomersToEditComboBox();
         }
 
         private void LoadAuthorsToEditComboBox()
@@ -66,6 +50,48 @@ namespace BookStoreManagementSystem
             }
         }
 
+        private void btnAddBook_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                AddBookForm frmAddBook = new AddBookForm();
+
+                var result = frmAddBook.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    LoadBooks();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi thêm sách: " + ex.Message);
+            }
+        }
+
+        private void LoadCustomersToEditComboBox()
+        {
+            try
+            {
+                DataTable dtCustomers = _customerRepository.GetAllCustomers();
+
+                // (Tùy chọn nhưng nên làm) Thêm một dòng "Không" (NULL)
+                DataRow nullRow = dtCustomers.NewRow();
+                nullRow["id"] = DBNull.Value; // Giá trị thực sự là NULL
+                nullRow["full_name"] = "[Không]";
+                dtCustomers.Rows.InsertAt(nullRow, 0); // Thêm vào đầu danh sách
+
+                cmbEditCustomers.DataSource = dtCustomers;
+                cmbEditCustomers.DisplayMember = "full_name";
+                cmbEditCustomers.ValueMember = "id";
+                cmbEditCustomers.DropDownStyle = ComboBoxStyle.DropDownList;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi tải danh sách khách hàng: " + ex.Message);
+            }
+        }
+
         private void dgvBooks_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvBooks.SelectedRows.Count > 0)
@@ -76,9 +102,8 @@ namespace BookStoreManagementSystem
 
                     string id = row.Cells["id"].Value.ToString();
                     int authorId = Convert.ToInt32(row.Cells["authorId"].Value);
-                    int currentCustomerId = row.Cells["current_customer_id"].Value != DBNull.Value
-                        ? Convert.ToInt32(row.Cells["current_customer_id"].Value)
-                        : -1;
+                    // SỬA: Lấy giá trị customerId một cách an toàn
+                    object customerIdObj = row.Cells["currentCustomerId"].Value;
                     string name = row.Cells["name"].Value.ToString();
                     string type = row.Cells["type"].Value.ToString();
                     DateTime pubDate = Convert.ToDateTime(row.Cells["publishedDate"].Value);
@@ -86,6 +111,10 @@ namespace BookStoreManagementSystem
 
                     lblSelectedBookId.Text = id;
                     cmbEditAuthors.SelectedValue = authorId;
+                    // SỬA: Gán giá trị cho cmbEditCustomers một cách an toàn
+                    // Nếu customerIdObj là DBNull, nó sẽ tự động chọn dòng [Không] (vì ValueMember của nó là DBNull.Value)
+                    // Nếu không, nó sẽ chọn khách hàng tương ứng.
+                    cmbEditCustomers.SelectedValue = customerIdObj;
                     txtEditName.Text = name;
                     txtEditType.Text = type;
                     dtpEditPublishedDate.Value = pubDate;
@@ -113,13 +142,19 @@ namespace BookStoreManagementSystem
                 DateTime pubDate = dtpEditPublishedDate.Value;
                 int authorId = (int)cmbEditAuthors.SelectedValue;
 
+                int? customerId = null;
+                if (cmbEditCustomers.SelectedValue != null && cmbEditCustomers.SelectedValue != DBNull.Value)
+                {
+                    customerId = Convert.ToInt32(cmbEditCustomers.SelectedValue);
+                }
+
                 if (id == 0 || string.IsNullOrWhiteSpace(name))
                 {
                     MessageBox.Show("Vui lòng chọn một cuốn sách và đảm bảo tên sách không bị trống.");
                     return;
                 }
 
-                _bookRepository.UpdateBook(id, name, type, price, pubDate, authorId);
+                _bookRepository.UpdateBook(id, name, type, price, pubDate, authorId, customerId);
 
                 MessageBox.Show("Cập nhật sách thành công!");
                 LoadBooks(); 
@@ -176,6 +211,12 @@ namespace BookStoreManagementSystem
             {
                 cmbEditAuthors.SelectedIndex = 0;
             }
+
+            // SỬA: Thêm reset cho cmbEditCustomers
+            if (cmbEditCustomers.Items.Count > 0)
+            {
+                cmbEditCustomers.SelectedIndex = 0; // Chọn [Không]
+            }
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
@@ -190,7 +231,6 @@ namespace BookStoreManagementSystem
 
             try
             {
-                // 1. Gọi hàm Repository mới
                 DataTable dtResults = _bookRepository.SearchBooksByName(searchTerm);
 
                 // 2. Cập nhật DataSource
@@ -284,6 +324,20 @@ namespace BookStoreManagementSystem
             {
                 MessageBox.Show("Lỗi khi chuẩn bị báo cáo: " + ex.Message, "Lỗi báo cáo");
             }
+        }
+
+        private void authorsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AuthorForm authorForm = new AuthorForm();
+
+            authorForm.ShowDialog();
+        }
+
+        private void customerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CustomerForm customerForm = new CustomerForm();
+
+            customerForm.ShowDialog();
         }
     }
 }

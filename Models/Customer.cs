@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace BookStoreManagementSystem.Models
 {
     public class Customer

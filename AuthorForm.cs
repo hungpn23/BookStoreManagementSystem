@@ -38,6 +38,7 @@ namespace BookStoreManagementSystem
         private void btnSearchAuthor_Click(object sender, EventArgs e)
         {
             string searchTerm = txtSearchAuthor.Text.Trim();
+            Console.WriteLine("Searching for author: " + searchTerm);
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
                 MessageBox.Show("Vui lòng nhập tên tác giả để tìm kiếm.");
@@ -59,6 +60,10 @@ namespace BookStoreManagementSystem
             LoadAuthors();
         }
 
+        /// <summary>
+        /// SỬA: Đổi 'shortBio' thành 'bio' và 'txtAuthorShortBio' thành 'txtAuthorBio'
+        /// SỬA: Thêm kiểm tra DBNull.Value
+        /// </summary>
         private void dgvAuthors_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvAuthors.SelectedRows.Count > 0)
@@ -71,7 +76,10 @@ namespace BookStoreManagementSystem
                     lblSelectedAuthorId.Text = row.Cells["id"].Value.ToString();
                     txtAuthorName.Text = row.Cells["name"].Value.ToString();
                     dtpAuthorBirthDate.Value = Convert.ToDateTime(row.Cells["birthDate"].Value);
-                    txtAuthorShortBio.Text = row.Cells["shortBio"].Value.ToString();
+
+                    // SỬA: Dùng 'bio' và kiểm tra DBNull
+                    object bioValue = row.Cells["bio"].Value;
+                    txtAuthorBio.Text = (bioValue == DBNull.Value) ? "" : bioValue.ToString();
                 }
                 catch (Exception ex)
                 {
@@ -91,7 +99,9 @@ namespace BookStoreManagementSystem
             ClearAuthorPanel();
         }
 
-        // Nút "Save" sẽ xử lý cả THÊM MỚI (Add) và CẬP NHẬT (Update)
+        /// <summary>
+        /// SỬA: Đổi 'txtAuthorShortBio' thành 'txtAuthorBio' và 'shortBio' thành 'bio'
+        /// </summary>
         private void btnAuthorSave_Click(object sender, EventArgs e)
         {
             try
@@ -100,7 +110,9 @@ namespace BookStoreManagementSystem
                 int id = Convert.ToInt32(lblSelectedAuthorId.Text);
                 string name = txtAuthorName.Text;
                 DateTime birthDate = dtpAuthorBirthDate.Value;
-                string shortBio = txtAuthorShortBio.Text;
+
+                // SỬA: Dùng 'txtAuthorBio'
+                string bio = txtAuthorBio.Text;
 
                 if (string.IsNullOrWhiteSpace(name))
                 {
@@ -111,13 +123,15 @@ namespace BookStoreManagementSystem
                 if (id == 0)
                 {
                     // ID = 0, nghĩa là đây là "Thêm mới"
-                    _authorRepository.AddAuthor(name, birthDate, shortBio);
+                    // SỬA: Truyền 'bio'
+                    _authorRepository.AddAuthor(name, birthDate, bio);
                     MessageBox.Show("Thêm tác giả thành công!");
                 }
                 else
                 {
                     // ID != 0, nghĩa là đây là "Cập nhật"
-                    _authorRepository.UpdateAuthor(id, name, birthDate, shortBio);
+                    // SỬA: Truyền 'bio'
+                    _authorRepository.UpdateAuthor(id, name, birthDate, bio);
                     MessageBox.Show("Cập nhật tác giả thành công!");
                 }
 
@@ -163,12 +177,15 @@ namespace BookStoreManagementSystem
             }
         }
 
-        // Hàm tiện ích để xóa trống panel chi tiết
+        /// <summary>
+        /// SỬA: Đổi 'txtAuthorShortBio' thành 'txtAuthorBio'
+        /// </summary>
         private void ClearAuthorPanel()
         {
             lblSelectedAuthorId.Text = "0";
             txtAuthorName.Text = "";
-            txtAuthorShortBio.Text = "";
+            // SỬA: Dùng 'txtAuthorBio'
+            txtAuthorBio.Text = "";
             dtpAuthorBirthDate.Value = DateTime.Now;
         }
     }
