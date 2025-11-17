@@ -84,7 +84,7 @@ namespace BookStoreManagementSystem
                 catch (Exception ex)
                 {
                     // Xử lý nếu giá trị bị null hoặc lỗi
-                    // MessageBox.Show("Lỗi khi chọn hàng: " + ex.Message);
+                     MessageBox.Show("Lỗi khi chọn hàng: " + ex.Message);
                     ClearAuthorPanel(); // Xóa trống nếu có lỗi
                 }
             }

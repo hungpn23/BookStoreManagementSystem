@@ -6,7 +6,7 @@ namespace BookStoreManagementSystem.DataAccess
 {
     public static class DatabaseHelper
     {
-        private static string GetConnectionString()
+        public static string GetConnectionString()
         {
             return ConfigurationManager.ConnectionStrings["BookStoreDb"].ConnectionString;
         }

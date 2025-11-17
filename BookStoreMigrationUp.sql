@@ -40,7 +40,7 @@ CREATE TABLE book_rentals(
     actual_return_date TIMESTAMP NULL,
     daily_fee_at_rental REAL NOT NULL,
     total_fee REAL NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'renting', -- 'returned', 'overdue'
+    status VARCHAR(20) NOT NULL DEFAULT 'Renting', -- 'Returned', 'Overdue'
 
     CONSTRAINT fk_rentals_books
         FOREIGN KEY (book_id)

@@ -1,5 +1,4 @@
-﻿
-namespace BookStoreManagementSystem.Models
+﻿namespace BookStoreManagementSystem.Models
 {
     public class Customer
     {

@@ -51,6 +51,7 @@ namespace BookStoreManagementSystem
                 }
                 catch (Exception ex)
                 {
+                    MessageBox.Show("Lỗi khi chọn hàng: " + ex.Message);
                     ClearCustomerPanel();
                 }
             }
